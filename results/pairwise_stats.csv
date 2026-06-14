@@ -1,0 +1,2 @@
+split,proposed,best_non_oracle_baseline,paired_task_success_diff,ci95,decisive_success_gate,safety_or_regret_gate,burden_gate,ablation_gate,stress_gate,terminal
+combined_authority_stress,proposed_authority_boundary,cbf_safety_filter,-0.46373,0.17551,False,False,False,False,False,KILL_ARCHIVE
