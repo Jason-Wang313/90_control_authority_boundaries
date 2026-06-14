@@ -4,42 +4,112 @@
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{booktabs}
-\title{Control Authority Boundaries: ICLR Main-Conference Gate Archive}
+\usepackage{graphicx}
+
+\title{Control Authority Boundaries: A Negative ICLR-Main Evidence Audit}
 \author{Anonymous Authors}
+
 \begin{document}
 \maketitle
+
 \begin{abstract}
-This document is not an ICLR main-conference submission. It is the v3 main-conference gate for a generated robotics draft about shared autonomy and robot control. The original research bet was: Model where authority should shift between policy, controller, and human. After a stricter hostile review, the honest terminal decision is \textbf{KILL/ARCHIVE}. Submission-hardening version: v3.
+This paper is not submission-ready for ICLR main. The original research bet was that a robot should maintain an explicit boundary over whether authority belongs to the learned policy, the low-level controller, or a human operator. We rebuilt the repository around a deterministic closed-loop shared-autonomy benchmark with four tasks, five distribution shifts, seven seeds, nine authority-allocation methods, seven ablations, and a stress sweep. The evidence is negative. On the combined authority-stress split, the proposed boundary reaches 0.516 task success, while a control-barrier-function safety filter reaches 0.980 and MPC risk arbitration reaches 0.976. The paired task-success difference against the strongest non-oracle baseline is -0.464 with a 95 percent CI of 0.176. Core ablations also contradict the mechanism: a safety-only boundary reaches 0.978 success and a minus-intent ablation reaches 0.946 success. The honest terminal decision is \textbf{KILL/ARCHIVE}.
 \end{abstract}
 
-\section{Gate Decision}
-The v2 paper was workshop-only. Under the active ICLR-main standard, that is insufficient. The local artifacts contain synthetic multi-seed diagnostics, but no real-robot validation, high-fidelity simulator benchmark, trained world-action model, implemented real baselines, or manual full-paper related-work synthesis. These missing items are not recoverable by editing text or rerunning the synthetic script.
+\section{Question}
+The draft asked whether shared autonomy improves when the system explicitly represents control-authority boundaries: when should a learned policy act, when should a low-level controller take over, and when should a human operator receive authority? This is a crowded area. Bayesian authority allocation, confidence-based shared control, haptic shared control, control barrier functions, nonlinear MPC, controller fusion, and seamless autonomy transitions already cover much of the obvious territory.
 
-\section{Fatal ICLR-Main Blockers}
-\begin{itemize}
-\item Evidence is synthetic and generated from a shared batch template.
-\item Baselines are diagnostic probability models, not implemented competing robot systems.
-\item Ablations do not correspond to a trained model checkpoint.
-\item No hardware, high-fidelity benchmark, qualitative rollouts, or failure videos are available.
-\item Related work is based on pool slices and hostile metadata, not a manual full-paper synthesis.
-\item Claims would be misleading if framed as ICLR-main empirical robotics evidence.
-\end{itemize}
+The rebuild therefore used a hostile gate: the proposed method must beat strong non-oracle shared-autonomy baselines under hidden physical modes, human-delay shifts, and contact-mode shifts. A merely plausible arbitration story is not enough.
 
-\section{Hostile Prior-Work Pressure}
-The closest local hostile records include:
-\begin{itemize}
-\item Safety-Critical Control for Human-Robot Interaction in Shared Workspaces using Control Barrier Functions (2026)
-\item Adaptive Impedance Control for the Haptic Shared Driving Task Based on Nonlinear MPC (2020)
-\item Bayesian Controller Fusion: Leveraging Control Priors in Deep Reinforcement Learning for Robotics (2021)
-\item A Shared Control Approach Based on First-Order Dynamical Systems and Closed-Loop Variable Stiffness Control (2023)
-\item Haptic Shared Control for Human-Robot Collaboration: A Game-Theoretical Approach (2020)
-\end{itemize}
-These works make generic world models, uncertainty, model-based planning, and robot policy robustness crowded. Without real empirical evidence, the remaining novelty boundary is too weak for ICLR main.
+\section{Benchmark}
+Each episode simulates a closed-loop shared-autonomy rollout over ten control phases. The hidden state includes obstacle hazard, contact volatility, human-intent ambiguity, human command delay, controller noise, and object fragility. The benchmark covers four tasks: fragile reaching through clutter, contact-rich door opening, delayed corridor navigation, and tool alignment. It evaluates five splits: nominal shared autonomy, intent ambiguity shift, contact mode shift, human delay shift, and combined authority stress.
 
-\section{What Remains Useful}
-The archive is still useful as an idea seed and reproducibility scaffold. The synthetic code, stress-test CSVs, reviewer attacks, and novelty-boundary docs can inform a future project. The correct next step is not more paper polishing; it is new evidence: implemented models, real baselines, manual related work, and robot or high-fidelity simulator validation.
+The main run contains 80,640 episode-level rollouts. The ablation run contains 12,544 rollouts. The stress sweep contains 47,040 rollouts. All results use seven deterministic seeds and are regenerated by:
+\begin{verbatim}
+python src\run_experiment.py
+\end{verbatim}
 
-\section{Terminal Action}
-Decision: \textbf{KILL/ARCHIVE for ICLR main}. Do not submit this paper to ICLR main in the current form. Revival requires a substantially new empirical project.
+\section{Compared Methods}
+The compared methods are fixed policy authority, fixed human authority, confidence-threshold shared control, Bayesian authority allocation, a control-barrier-function safety filter, MPC risk arbitration, controller-fusion priors, the proposed authority-boundary mechanism, and an oracle authority boundary. The proposed method scores authority choices using predicted physical consequence, intent ambiguity, recovery burden, and handoff hysteresis. The oracle has access to hidden-mode utility and is included only as an upper-bound diagnostic.
+
+\section{Combined-Stress Results}
+Table~\ref{tab:combined} shows the main failure. The proposed boundary is safer than fixed policy authority and controller fusion, but it is not competitive with CBF or MPC. It also places a heavy load on the human operator.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Method & Success & Safety viol. & Regret & Human burden \\
+\midrule
+Fixed policy & 0.000 & 0.886 & 0.784 & 0.000 \\
+Fixed human & 0.265 & 0.567 & 0.052 & 1.000 \\
+Confidence shared & 0.299 & 0.574 & 0.092 & 0.899 \\
+Bayesian allocation & 0.736 & 0.563 & 0.012 & 0.698 \\
+CBF safety filter & \textbf{0.980} & 0.580 & 0.027 & \textbf{0.051} \\
+MPC risk arbitration & 0.976 & 0.586 & 0.021 & 0.098 \\
+Controller fusion & 0.164 & 0.719 & 0.484 & 0.208 \\
+Proposed boundary & 0.516 & 0.571 & 0.026 & 0.858 \\
+Oracle boundary & 0.979 & \textbf{0.556} & \textbf{0.009} & 0.225 \\
+\bottomrule
+\end{tabular}
+\caption{Combined authority-stress results. Lower safety violation, regret, and human burden are better. The proposed method loses decisively on task success and human burden.}
+\label{tab:combined}
+\end{table}
+
+The paired seed/task comparison uses CBF safety filtering as the strongest non-oracle success baseline. The proposed method's task-success difference is -0.464 with a 95 percent CI of 0.176. That is not a noisy near miss; it is a mechanism-level failure for the claimed contribution.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/authority_boundary_success_safety.png}
+\caption{Success and safety-violation rates on the combined authority-stress split. The proposed boundary does not clear CBF or MPC.}
+\label{fig:success-safety}
+\end{figure}
+
+\section{Ablations}
+Table~\ref{tab:ablations} is more damaging than the baseline comparison. Removing intent ambiguity or using only the safety boundary improves success dramatically. A proposed mechanism whose stripped versions dominate the full version is not ready for a main-conference submission.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Ablation & Success & Safety viol. & Regret & Human burden \\
+\midrule
+Full boundary & 0.504 & 0.570 & 0.026 & 0.856 \\
+Minus consequence & 0.581 & 0.573 & 0.018 & 0.786 \\
+Minus intent & 0.946 & 0.566 & \textbf{0.005} & 0.422 \\
+Minus recovery burden & 0.357 & \textbf{0.536} & 0.047 & 0.976 \\
+Minus hysteresis & 0.528 & 0.555 & 0.031 & 0.879 \\
+Confidence only & 0.264 & 0.588 & 0.135 & 0.882 \\
+Safety only & \textbf{0.978} & 0.575 & 0.034 & \textbf{0.049} \\
+\bottomrule
+\end{tabular}
+\caption{Ablations on the combined authority-stress split. The safety-only and minus-intent variants beat the full mechanism, falsifying the main design claim.}
+\label{tab:ablations}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/authority_boundary_ablation.png}
+\caption{Ablation audit. The full authority-boundary mechanism is not the best configuration.}
+\label{fig:ablation}
+\end{figure}
+
+\section{Stress Sweep}
+At maximum combined stress, the proposed method reaches 0.506 success. CBF reaches 0.979, MPC reaches 0.973, and Bayesian authority allocation reaches 0.742. The stress gate therefore fails. The proposed model has a useful diagnostic behavior--it avoids late handoff in many cases--but it pays for that with excessive human burden and low completion success.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/authority_boundary_stress_sweep.png}
+\caption{Combined stress sweep. The proposed boundary does not overtake CBF or MPC at high stress.}
+\label{fig:stress}
+\end{figure}
+
+\section{Failure Cases}
+The negative cases are consistent with the quantitative result. First, under high human delay with hidden intent, the boundary over-penalizes handoff and can stay with the wrong non-human authority too long. Second, in dense fragile obstacles, the CBF-style filter reduces failures more directly than authority scoring. Third, in contact-mode shifts with low ambiguity, MPC risk arbitration solves the problem without needing an explicit authority-boundary representation.
+
+\section{Decision}
+The result is useful but not submission-ready. The benchmark shows that authority-boundary state is an interesting diagnostic object, but the proposed mechanism does not beat strong shared-autonomy baselines, does not survive ablation, and has no robot-hardware or high-fidelity simulator validation. The terminal recommendation is \textbf{KILL/ARCHIVE}. Revival would require a substantially different method that proves value beyond CBF, MPC, Bayesian allocation, and controller fusion on external robot evidence.
 
 \end{document}
