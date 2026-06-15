@@ -192,3 +192,24 @@ Attack: No meaningful recoverable ICLR-main issue remains after archiving.
 Verdict: Terminal condition reached.
 
 Action: Mark KILL_ARCHIVE and stop.
+
+## v4 Rerun Gate Round 28
+Attack: The local benchmark might show that explicit authority boundaries beat strong CBF/MPC baselines after rerun.
+
+Verdict: Failed. The proposed method reaches `0.51618` task success, while `cbf_safety_filter` reaches `0.97991` and `mpc_risk_arbitration` reaches `0.97600`; paired difference versus CBF is `-0.46373 +/- 0.17551`.
+
+Action: Keep KILL_ARCHIVE.
+
+## v4 Rerun Gate Round 29
+Attack: The method might compensate through lower burden or regret.
+
+Verdict: Failed. Human burden is `0.85824`, far above CBF at `0.05055` and MPC at `0.09830`.
+
+Action: Do not claim practical shared-autonomy advantage.
+
+## v4 Rerun Gate Round 30
+Attack: Ablations might validate the boundary mechanism.
+
+Verdict: Failed. `safety_only_boundary` reaches `0.97768` success and `minus_intent_ambiguity` reaches `0.94587`, both above the full method.
+
+Action: Preserve archive decision.
