@@ -6,6 +6,8 @@ Terminal decision: KILL_ARCHIVE for ICLR main conference.
 
 This repository now contains a deterministic closed-loop shared-autonomy evidence audit for the claim that robots should maintain explicit boundaries over policy, controller, and human control authority. The rebuilt benchmark includes four tasks, five shifts, seven seeds, nine authority-allocation methods, seven ablations, and a combined stress sweep.
 
+Latest audited rerun: 2026-06-15. The source experiment compiled and regenerated the CSVs, figures, gate checks, and summary from `src/run_experiment.py`; the successful full rerun output is logged at `logs/90_control_authority_boundaries_continuation_rerun_20260615.log`.
+
 ## Key Result
 
 On combined authority stress:
@@ -16,6 +18,16 @@ On combined authority stress:
 - Paired task-success difference vs strongest non-oracle baseline: -0.464 +/- 0.176.
 
 The proposed method is not submission-ready because it loses decisively to CBF/MPC baselines, imposes high human burden, and is contradicted by ablations. The safety-only ablation reaches 0.978 success and the minus-intent ablation reaches 0.946 success.
+
+## Evidence Coverage
+
+- Main rollouts: 80,640 rows.
+- Ablation rollouts: 12,544 rows.
+- Stress rollouts: 47,040 rows.
+- Seeds: 0 through 6.
+- Splits: `nominal_shared_autonomy`, `intent_ambiguity_shift`, `contact_mode_shift`, `human_delay_shift`, `combined_authority_stress`.
+- Tasks: `fragile_reaching`, `contact_door_opening`, `delayed_corridor_navigation`, `tool_alignment`.
+- Terminal gate: `KILL_ARCHIVE`, because the evidence supports a reproducible negative audit, not an ICLR-main submission.
 
 ## Reproduce Evidence
 

@@ -16,3 +16,16 @@
 - Determined that missing real-robot/high-fidelity evidence, template-generated experiments, and unresolved novelty threats are not recoverable from local artifacts.
 - Recompiled the canonical PDF with `Submission-hardening version: v3`.
 - Terminal decision: KILL_ARCHIVE.
+
+## v4 - Paper-Specific Authority-Boundary Rebuild
+- Replaced the generic archive framing with a deterministic closed-loop shared-autonomy benchmark.
+- Added four tasks, five authority-stress splits, nine methods, seven seeds, ablations, stress sweep, negative cases, and figures.
+- Reported 80,640 main rollouts, 12,544 ablation rollouts, and 47,040 stress rollouts.
+- Found that the proposed authority-boundary mechanism loses decisively to CBF and MPC baselines and fails ablation gates.
+- Terminal decision: KILL_ARCHIVE.
+
+## v4.1 - 2026-06-15 Rerun Audit
+- Re-ran `python -m py_compile src\run_experiment.py` and the full `python src\run_experiment.py`.
+- Confirmed the paired task-success difference versus `cbf_safety_filter` is `-0.46373 +/- 0.17551`.
+- Confirmed high human burden, ablation contradiction, and maximum-stress failure.
+- Updated child docs and paper source to keep the v4 KILL_ARCHIVE decision evidence-bound.
