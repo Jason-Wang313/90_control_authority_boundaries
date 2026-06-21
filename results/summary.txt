@@ -1,44 +1,120 @@
-Paper 90 control_authority_boundaries v4 rebuild
+Paper 90 control_authority_boundaries v5 expanded audit
 Terminal recommendation: KILL_ARCHIVE
-Reason: deterministic closed-loop shared-autonomy benchmark added; no robot hardware validation is available.
-Main rollout rows: 80640
-Ablation rollout rows: 12544
-Stress rollout rows: 47040
-Seeds: [0, 1, 2, 3, 4, 5, 6]
+ICLR main ready: no
+Reason: expanded CPU-only control-authority audit adds stronger CBF, MPC, POMDP, recovery-aware, uncertainty, ablation, stress, and fixed-risk tests, but no real robot or accepted high-fidelity deployment benchmark evidence exists.
+Main rollout rows: 199680
+Dataset summary rows: 15360
+Main seed-metric rows: 1040
+Main metric rows: 1248
+Main pairwise rows: 672
+Hard aggregate seed rows: 130
+Hard aggregate metric rows: 156
+Hard aggregate pairwise rows: 84
+Ablation rollout rows: 33600
+Ablation seed rows: 200
+Ablation metric rows: 20
+Stress raw rows: 302400
+Stress seed rows: 2520
+Stress metric rows: 252
+Fixed-risk raw rows: 69120
+Fixed-risk seed rows: 480
+Fixed-risk metric rows: 48
+Fixed-risk pairwise rows: 200
+Negative cases: 24
 
-Combined authority stress:
-fixed_policy_authority task_success=0.00000 ci95=0.00000 safety=0.88616 regret=0.78418 late=0.70000 burden=0.00000 recovery=0.00000
-fixed_human_authority task_success=0.26451 ci95=0.15771 safety=0.56696 regret=0.05197 late=0.00000 burden=1.00000 recovery=0.75000
-confidence_threshold_shared_control task_success=0.29911 ci95=0.15038 safety=0.57366 regret=0.09162 late=0.03951 burden=0.89878 recovery=0.73661
-bayesian_authority_allocation task_success=0.73605 ci95=0.10982 safety=0.56250 regret=0.01238 late=0.00000 burden=0.69809 recovery=1.00000
-cbf_safety_filter task_success=0.97991 ci95=0.00702 safety=0.58036 regret=0.02654 late=0.00123 burden=0.05055 recovery=0.98605
-mpc_risk_arbitration task_success=0.97600 ci95=0.00695 safety=0.58594 regret=0.02094 late=0.00000 burden=0.09830 recovery=0.99833
-controller_fusion_prior task_success=0.16350 ci95=0.09844 safety=0.71875 regret=0.48403 late=0.00151 burden=0.20799 recovery=0.13560
-proposed_authority_boundary task_success=0.51618 ci95=0.17545 safety=0.57087 regret=0.02647 late=0.00000 burden=0.85824 recovery=0.98326
-oracle_authority_boundary task_success=0.97935 ci95=0.00819 safety=0.55580 regret=0.00938 late=0.00000 burden=0.22521 recovery=1.00000
-paired task-success diff vs best success baseline cbf_safety_filter=-0.46373 ci95=0.17551
+Frozen hard-aggregate gate:
+best_success_reference=recovery_aware_mpc
+safest_reference=cbf_safety_filter
+lowest_burden_reference=fixed_policy_authority
+lowest_regret_reference=mpc_risk_arbitration
+best_utility_reference=cbf_safety_filter
+proposal_success=0.37096
+best_success=0.47370
+proposal_safety=0.22734
+safest_safety=0.15404
+proposal_burden=0.67510
+lowest_burden=0.26831
+proposal_regret=0.31249
+lowest_regret=0.24285
+proposal_utility=-0.09423
+best_utility=0.16009
+paired_success_lower95=-0.12094
+paired_safety_upper95=0.08260
+main_gate=False
+mechanism_gate=False
+mechanism_best_removed=safety_only_boundary
+stress_gate=False
+stress_dominated_by=cbf_safety_filter
+fixed_risk_gate=False
+scope_gate=False
+low_signal_high_risk_shift: v5_coverage=0.00000, best_feasible_coverage=0.00000, v5_success=0.00000, best_feasible_success=0.00000, v5_safety=0.00000, best_feasible_safety=0.00000 | combined_authority_stress: v5_coverage=0.00000, best_feasible_coverage=0.00000, v5_success=0.00000, best_feasible_success=0.00000, v5_safety=0.00000, best_feasible_safety=0.00000
 
-Ablations:
-confidence_only_boundary task_success=0.26395 ci95=0.15736 safety=0.58817 regret=0.13503 burden=0.88214
-full_authority_boundary task_success=0.50446 ci95=0.17386 safety=0.56975 regret=0.02637 burden=0.85633
-minus_consequence_model task_success=0.58147 ci95=0.15359 safety=0.57310 regret=0.01768 burden=0.78641
-minus_handoff_hysteresis task_success=0.52790 ci95=0.17301 safety=0.55525 regret=0.03058 burden=0.87945
-minus_intent_ambiguity task_success=0.94587 ci95=0.02397 safety=0.56641 regret=0.00492 burden=0.42226
-minus_recovery_burden task_success=0.35658 ci95=0.14799 safety=0.53627 regret=0.04718 burden=0.97556
-safety_only_boundary task_success=0.97768 ci95=0.00746 safety=0.57533 regret=0.03433 burden=0.04942
+Hard aggregate metrics:
+fixed_policy_authority task_success=0.01823 safety=0.41862 burden=0.26831 regret=0.63259 late=0.53935 churn=0.31974 utility=-0.60137
+fixed_human_teleoperation task_success=0.13997 safety=0.26654 burden=0.99980 regret=0.40281 late=0.40063 churn=0.30982 utility=-0.48033
+confidence_threshold_shared_control task_success=0.16250 safety=0.29635 burden=0.84908 regret=0.43979 late=0.38356 churn=0.46987 utility=-0.46111
+bayesian_authority_allocation task_success=0.31654 safety=0.24987 burden=0.69923 regret=0.33283 late=0.33014 churn=0.40970 utility=-0.18359
+uncertainty_triggered_handoff task_success=0.27982 safety=0.22617 burden=0.77185 regret=0.35436 late=0.32311 churn=0.49993 utility=-0.24252
+cbf_safety_filter task_success=0.44648 safety=0.15404 burden=0.29398 regret=0.26412 late=0.28285 churn=0.33990 utility=0.16009
+mpc_risk_arbitration task_success=0.46901 safety=0.19062 burden=0.33930 regret=0.24285 late=0.26731 churn=0.35020 utility=0.15433
+pomdp_handoff_policy task_success=0.39714 safety=0.21615 burden=0.52321 regret=0.28029 late=0.29211 churn=0.38970 utility=-0.00731
+controller_fusion_prior task_success=0.08607 safety=0.37031 burden=0.43762 regret=0.56034 late=0.38481 churn=0.43978 utility=-0.50860
+recovery_aware_mpc task_success=0.47370 safety=0.20156 burden=0.38643 regret=0.25674 late=0.26338 churn=0.35974 utility=0.13605
+authority_boundary_v4 task_success=0.30365 safety=0.24310 burden=0.82884 regret=0.34824 late=0.30946 churn=0.43980 utility=-0.22875
+authority_boundary_v5 task_success=0.37096 safety=0.22734 burden=0.67510 regret=0.31249 late=0.29451 churn=0.41995 utility=-0.09423
+oracle_authority_assignment task_success=0.55287 safety=0.12747 burden=0.38300 regret=0.18831 late=0.24876 churn=0.32992 utility=0.29331
 
-Combined stress level 1.0:
-bayesian_authority_allocation task_success=0.74196 ci95=0.11497 safety=0.55625 regret=0.01187 burden=0.68786
-cbf_safety_filter task_success=0.97946 ci95=0.00799 safety=0.58571 regret=0.02693 burden=0.05023
-confidence_threshold_shared_control task_success=0.30893 ci95=0.14917 safety=0.59464 regret=0.09241 burden=0.89623
-controller_fusion_prior task_success=0.15179 ci95=0.08763 safety=0.70446 regret=0.48267 burden=0.21042
-mpc_risk_arbitration task_success=0.97321 ci95=0.00941 safety=0.56786 regret=0.02122 burden=0.09368
-oracle_authority_boundary task_success=0.97321 ci95=0.01180 safety=0.56964 regret=0.00940 burden=0.22049
-proposed_authority_boundary task_success=0.50625 ci95=0.17711 safety=0.53304 regret=0.02621 burden=0.85665
+Key paired hard-aggregate differences:
+v5_minus_authority_boundary_v4 authority_regret: mean=-0.03575 ci95=0.00040 lower95=-0.03615 upper95=-0.03535
+v5_minus_authority_boundary_v4 human_burden: mean=-0.15374 ci95=0.00046 lower95=-0.15420 upper95=-0.15328
+v5_minus_authority_boundary_v4 robust_utility: mean=0.13452 ci95=0.02027 lower95=0.11425 upper95=0.15479
+v5_minus_authority_boundary_v4 safety_violation: mean=-0.01576 ci95=0.01420 lower95=-0.02996 upper95=-0.00155
+v5_minus_authority_boundary_v4 task_success: mean=0.06732 ci95=0.01615 lower95=0.05117 upper95=0.08347
+v5_minus_cbf_safety_filter authority_regret: mean=0.04838 ci95=0.00041 lower95=0.04797 upper95=0.04879
+v5_minus_cbf_safety_filter human_burden: mean=0.38112 ci95=0.00053 lower95=0.38059 upper95=0.38166
+v5_minus_cbf_safety_filter robust_utility: mean=-0.25432 ci95=0.01008 lower95=-0.26440 upper95=-0.24425
+v5_minus_cbf_safety_filter safety_violation: mean=0.07331 ci95=0.00930 lower95=0.06401 upper95=0.08260
+v5_minus_cbf_safety_filter task_success: mean=-0.07552 ci95=0.01190 lower95=-0.08742 upper95=-0.06362
+v5_minus_recovery_aware_mpc authority_regret: mean=0.05575 ci95=0.00027 lower95=0.05549 upper95=0.05602
+v5_minus_recovery_aware_mpc human_burden: mean=0.28867 ci95=0.00057 lower95=0.28809 upper95=0.28924
+v5_minus_recovery_aware_mpc robust_utility: mean=-0.23028 ci95=0.01716 lower95=-0.24744 upper95=-0.21312
+v5_minus_recovery_aware_mpc safety_violation: mean=0.02578 ci95=0.01572 lower95=0.01006 upper95=0.04150
+v5_minus_recovery_aware_mpc task_success: mean=-0.10273 ci95=0.01820 lower95=-0.12094 upper95=-0.08453
 
-Gate checks:
-decisive_success=False
-safety_or_regret=False
-burden_ok=False
-ablation_ok=False best_ablation=safety_only_boundary
-stress_ok=False stress_best_baseline=cbf_safety_filter
+Ablation utility:
+confidence_only_boundary success=0.12202 safety=0.31012 burden=0.84354 utility=-0.52941
+full_authority_boundary_v5 success=0.31190 safety=0.22024 burden=0.70912 utility=-0.17729
+minus_boundary_uncertainty success=0.30000 safety=0.28214 burden=0.68175 utility=-0.23573
+minus_consequence_risk_model success=0.25417 safety=0.31667 burden=0.68326 utility=-0.30783
+minus_handoff_hysteresis success=0.33452 safety=0.23869 burden=0.72934 utility=-0.19666
+minus_human_burden_model success=0.33809 safety=0.26131 burden=0.89816 utility=-0.22508
+minus_intent_ambiguity_gate success=0.37024 safety=0.25655 burden=0.51801 utility=-0.07057
+minus_recovery_feasibility success=0.29762 safety=0.24524 burden=0.68956 utility=-0.21815
+mpc_only_boundary success=0.41845 safety=0.20536 burden=0.38331 utility=0.06065
+safety_only_boundary success=0.40357 safety=0.16845 burden=0.32781 utility=0.07944
+
+Maximum combined stress:
+confidence_threshold_shared_control task_success=0.00500 safety=0.40667 burden=0.99530 utility=-0.81291
+bayesian_authority_allocation task_success=0.14083 safety=0.31917 burden=0.86569 utility=-0.53318
+cbf_safety_filter task_success=0.27667 safety=0.21667 burden=0.46016 utility=-0.17817
+mpc_risk_arbitration task_success=0.29417 safety=0.25000 burden=0.50502 utility=-0.18696
+pomdp_handoff_policy task_success=0.24417 safety=0.27833 burden=0.68907 utility=-0.32896
+recovery_aware_mpc task_success=0.30250 safety=0.27583 burden=0.55264 utility=-0.21091
+authority_boundary_v5 task_success=0.20667 safety=0.28667 burden=0.84131 utility=-0.42587
+
+Fixed-risk budget 0.05:
+combined_authority_stress authority_boundary_v5 coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+combined_authority_stress bayesian_authority_allocation coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+combined_authority_stress cbf_safety_filter coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+combined_authority_stress mpc_risk_arbitration coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+combined_authority_stress pomdp_handoff_policy coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+combined_authority_stress recovery_aware_mpc coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+low_signal_high_risk_shift authority_boundary_v5 coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+low_signal_high_risk_shift bayesian_authority_allocation coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+low_signal_high_risk_shift cbf_safety_filter coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+low_signal_high_risk_shift mpc_risk_arbitration coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+low_signal_high_risk_shift pomdp_handoff_policy coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+low_signal_high_risk_shift recovery_aware_mpc coverage=0.00000 accepted_success=0.00000 accepted_safety=0.00000 accepted_regret=0.00000
+
+Negative cases: 24
+terminal=KILL_ARCHIVE
