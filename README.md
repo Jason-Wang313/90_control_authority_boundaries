@@ -1,38 +1,49 @@
 # 90 Control Authority Boundaries
 
-Submission-hardening version: v4
+Submission-hardening version: v5 expanded
 
 Terminal decision: KILL_ARCHIVE for ICLR main conference.
 
-This repository now contains a deterministic closed-loop shared-autonomy evidence audit for the claim that robots should maintain explicit boundaries over policy, controller, and human control authority. The rebuilt benchmark includes four tasks, five shifts, seven seeds, nine authority-allocation methods, seven ablations, and a combined stress sweep.
-
-Latest audited rerun: 2026-06-15. The source experiment compiled and regenerated the CSVs, figures, gate checks, and summary from `src/run_experiment.py`; the successful full rerun output is logged at `logs/90_control_authority_boundaries_continuation_rerun_20260615.log`.
+This repository contains a deterministic CPU-only, RAM-light hostile-review audit for the claim that robots should keep explicit boundaries over policy, controller, and human control authority. The v5 rebuild expands the old four-page artifact into a 29-page ICLR-style negative archive manuscript with bright boxed clickable citations, generated tables, full CSV evidence, validation scripts, and a Downloads-only canonical PDF.
 
 ## Key Result
 
-On combined authority stress:
+The proposed `authority_boundary_v5` improves over `authority_boundary_v4`, but it is still not submission-ready:
 
-- Proposed authority boundary: task success 0.516, safety violation 0.571, authority regret 0.026, human burden 0.858.
-- CBF safety filter: task success 0.980, safety violation 0.580, authority regret 0.027, human burden 0.051.
-- MPC risk arbitration: task success 0.976, safety violation 0.586, authority regret 0.021, human burden 0.098.
-- Paired task-success difference vs strongest non-oracle baseline: -0.464 +/- 0.176.
+- Hard-aggregate success: `authority_boundary_v5` 0.37096 versus `recovery_aware_mpc` 0.47370.
+- Hard-aggregate safety violation: `authority_boundary_v5` 0.22734 versus `cbf_safety_filter` 0.15404.
+- Human burden: `authority_boundary_v5` 0.67510 versus `fixed_policy_authority` 0.26831.
+- Authority regret: `authority_boundary_v5` 0.31249 versus `mpc_risk_arbitration` 0.24285.
+- Robust utility: `authority_boundary_v5` -0.09423 versus `cbf_safety_filter` 0.16009.
+- Paired success lower95 versus the strongest non-oracle baseline: -0.12094.
+- Frozen gates: `main_gate=False`, `mechanism_gate=False`, `stress_gate=False`, `fixed_risk_gate=False`, `scope_gate=False`.
 
-The proposed method is not submission-ready because it loses decisively to CBF/MPC baselines, imposes high human burden, and is contradicted by ablations. The safety-only ablation reaches 0.978 success and the minus-intent ablation reaches 0.946 success.
+The terminal decision stays `KILL_ARCHIVE`: v5 is a stronger and more honest paper, not a main-conference submission. The method fails strong-baseline, safety, mechanism-ablation, maximum-stress, fixed-risk, and external-validation gates.
 
 ## Evidence Coverage
 
-- Main rollouts: 80,640 rows.
-- Ablation rollouts: 12,544 rows.
-- Stress rollouts: 47,040 rows.
-- Seeds: 0 through 6.
-- Splits: `nominal_shared_autonomy`, `intent_ambiguity_shift`, `contact_mode_shift`, `human_delay_shift`, `combined_authority_stress`.
-- Tasks: `fragile_reaching`, `contact_door_opening`, `delayed_corridor_navigation`, `tool_alignment`.
-- Terminal gate: `KILL_ARCHIVE`, because the evidence supports a reproducible negative audit, not an ICLR-main submission.
+- Main rollout rows: 199,680.
+- Dataset summary rows: 15,360.
+- Main seed-metric rows: 1,040.
+- Main aggregate metric rows: 1,248.
+- Main paired rows: 672.
+- Hard-aggregate seed rows: 130.
+- Hard-aggregate metric rows: 156.
+- Hard-aggregate paired rows: 84.
+- Ablation rollout rows: 33,600.
+- Stress raw rows: 302,400.
+- Fixed-risk raw rows: 69,120.
+- Negative cases: 24.
+- Splits: eight authority and deployment-stress splits, including `combined_authority_stress` and `low_signal_high_risk_shift`.
+- Methods: thirteen authority-allocation methods, including CBF, MPC, POMDP, recovery-aware MPC, uncertainty handoff, v4, v5, and oracle controls.
 
 ## Reproduce Evidence
 
 ```powershell
+python -m py_compile src\run_experiment.py
 python src\run_experiment.py
+python scripts\generate_manuscript.py
+python scripts\validate_submission_artifacts.py
 ```
 
 ## Rebuild PDF
@@ -40,9 +51,14 @@ python src\run_experiment.py
 ```powershell
 cd paper
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
+bibtex main
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
+Copy-Item -LiteralPath main.pdf -Destination C:\Users\wangz\Downloads\90.pdf -Force
 ```
 
 Canonical local PDF: `C:/Users/wangz/Downloads/90.pdf`
+
+Validated PDF: 29 pages, SHA256 `7C5590AC45F6E70BC75425A64D7AAB76142C51F528AEA636E16413533AEF9346`.
 
 No PDF should be copied to the visible Desktop.
